@@ -97,7 +97,7 @@ function VillageEditor({ village }: { village: { id: string; name: string; slug:
   useEffect(() => setTagline(village.tagline ?? ""), [village.tagline]);
   async function save() {
     const { error } = await supabase.from("villages").update({ tagline }).eq("id", village.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     qc.invalidateQueries({ queryKey: ["villages"] });
   }

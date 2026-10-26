@@ -31,7 +31,7 @@ function AuthPage() {
     const email = id.includes("@") ? id.trim() : villageAdminEmail(id.trim().toLowerCase());
     const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
     setBusy(false);
-    if (error) return toast.error("Username atau password salah");
+    if (error) { toast.error("Username atau password salah"); return; }
     nav({ to: "/dashboard" });
   }
 

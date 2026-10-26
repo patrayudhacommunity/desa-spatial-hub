@@ -20,7 +20,7 @@ export default function VillageMap({
   className?: string;
 }) {
   return (
-    <MapContainer center={[-2.5, 118]} zoom={5} scrollWheelZoom className={className} style={{ height: "100%", width: "100%" }}>
+    <MapContainer center={[-2.5, 118]} zoom={5} scrollWheelZoom className={className ?? ""} style={{ height: "100%", width: "100%" }}>
       <TileLayer attribution="&copy; OpenStreetMap" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {villages.map((v) => (
         <CircleMarker key={v.slug} center={[v.latitude, v.longitude]} radius={9} pathOptions={{ color: "#1f4d3a", fillColor: "#d9a441", fillOpacity: 0.95, weight: 3 }}>

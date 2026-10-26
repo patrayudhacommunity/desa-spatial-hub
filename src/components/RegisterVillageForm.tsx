@@ -24,7 +24,7 @@ export function RegisterVillageForm() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!coord) return toast.error("Pilih koordinat desa di peta atau tempel tautan Google Maps");
+    if (!coord) { toast.error("Pilih koordinat desa di peta atau tempel tautan Google Maps"); return; }
     setBusy(true);
     try {
       const res = await register({ data: { name, province, latitude: coord.lat, longitude: coord.lng } });
