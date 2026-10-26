@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { RESERVED_SLUGS, slugifyVillage, villageAdminEmail, villageAdminPassword } from "./slug";
+import { isValidVillageSlug, slugifyVillage, villageAdminEmail, villageAdminPassword } from "./slug";
 
 const schema = z.object({
   name: z.string().trim().min(3).max(80),
@@ -13,7 +13,7 @@ export const registerVillage = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => schema.parse(input))
   .handler(async ({ data }) => {
     const slug = slugifyVillage(data.name);
-    if (slug.length < 3 || RESERVED_SLUGS.includes(slug)) throw new Error("Nama desa tidak valid");
+    if (!isValidVillageSlug(slug)) throw new Error("Nama desa tidak valid sebagai alamat laman/subdomain");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: existing } = await supabaseAdmin.from("villages").select("id").eq("slug", slug).maybeSingle();
