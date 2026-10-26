@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -19,7 +19,8 @@ export function RegisterVillageForm() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<{ slug: string; username: string; password: string } | null>(null);
   const slug = slugifyVillage(name);
-  const host = typeof window === "undefined" ? "domain.id" : window.location.host;
+  const [host, setHost] = useState("domain.id");
+  useEffect(() => setHost(window.location.host), []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
