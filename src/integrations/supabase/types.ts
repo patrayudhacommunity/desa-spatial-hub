@@ -32,37 +32,84 @@ export type Database = {
         }
         Relationships: []
       }
+      village_pages: {
+        Row: {
+          content: string
+          id: string
+          menu_key: string
+          updated_at: string
+          village_id: string
+        }
+        Insert: {
+          content?: string
+          id?: string
+          menu_key: string
+          updated_at?: string
+          village_id: string
+        }
+        Update: {
+          content?: string
+          id?: string
+          menu_key?: string
+          updated_at?: string
+          village_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "village_pages_village_id_fkey"
+            columns: ["village_id"]
+            isOneToOne: false
+            referencedRelation: "villages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       villages: {
         Row: {
+          address: string | null
           admin_user_id: string | null
+          contact_email: string | null
           created_at: string
+          head_name: string | null
           id: string
           latitude: number
           longitude: number
           name: string
+          phone: string | null
           province: string | null
+          setup_completed: boolean
           slug: string
           tagline: string | null
         }
         Insert: {
+          address?: string | null
           admin_user_id?: string | null
+          contact_email?: string | null
           created_at?: string
+          head_name?: string | null
           id?: string
           latitude: number
           longitude: number
           name: string
+          phone?: string | null
           province?: string | null
+          setup_completed?: boolean
           slug: string
           tagline?: string | null
         }
         Update: {
+          address?: string | null
           admin_user_id?: string | null
+          contact_email?: string | null
           created_at?: string
+          head_name?: string | null
           id?: string
           latitude?: number
           longitude?: number
           name?: string
+          phone?: string | null
           province?: string | null
+          setup_completed?: boolean
           slug?: string
           tagline?: string | null
         }
