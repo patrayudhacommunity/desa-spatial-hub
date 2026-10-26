@@ -1,13 +1,28 @@
-export const RESERVED_SLUGS = ["auth", "dashboard", "api", "admin", "login"];
+export const RESERVED_SLUGS = ["auth", "dashboard", "api", "admin", "login", "daftar", "setup"];
 
+/**
+ * Nama desa → slug untuk URL utama (domain.id/nama-desa) sekaligus subdomain
+ * (nama-desa.domain.id). Hanya huruf kecil, angka, dan tanda hubung yang dipakai
+ * agar valid sebagai label DNS.
+ */
 export function slugifyVillage(name: string): string {
   return name
+    .trim()
     .toLowerCase()
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/^desa\s+/, "")
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 63)
+    .replace(/-+$/g, "");
+}
+
+/** Validasi slug hasil penamaan desa sebelum didaftarkan. */
+export function isValidVillageSlug(slug: string): boolean {
+  if (slug.length < 3 || slug.length > 63) return false;
+  if (!/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(slug)) return false;
+  return !RESERVED_SLUGS.includes(slug);
 }
 
 export function villageAdminEmail(slug: string) {

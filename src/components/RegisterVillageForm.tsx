@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { LazyMap } from "./LazyMap";
 
 export function RegisterVillageForm() {
   const register = useServerFn(registerVillage);
+  const nav = useNavigate();
   const qc = useQueryClient();
   const [name, setName] = useState("");
   const [province, setProvince] = useState("");
@@ -38,16 +40,21 @@ export function RegisterVillageForm() {
     }
   }
 
-  if (done)
+  if (done) {
+    const subdomainUrl = `http://${done.slug}.${host}`;
     return (
       <div className="space-y-3 rounded-xl border bg-secondary p-6">
         <h3 className="text-2xl">Desa siap digunakan 🎉</h3>
-        <p>Alamat laman: <a className="font-semibold text-primary underline" href={`/${done.slug}`}>{host}/{done.slug}</a></p>
-        <p className="text-sm text-muted-foreground">Subdomain: {done.slug}.{host}</p>
+        <p>Domain utama: <a className="font-semibold text-primary underline" href={`/${done.slug}`}>{host}/{done.slug}</a></p>
+        <p className="text-sm text-muted-foreground">Subdomain: <a className="font-semibold underline" href={subdomainUrl}>{done.slug}.{host}</a></p>
         <p>Login admin desa — username: <b>{done.username}</b>, password: <b>{done.password}</b></p>
-        <Button variant="outline" onClick={() => { setDone(null); setName(""); setCoord(null); setGmaps(""); }}>Daftarkan desa lain</Button>
+        <div className="flex gap-2 pt-1">
+          <Button onClick={() => nav({ to: "/auth" })}>Masuk sebagai admin desa</Button>
+          <Button variant="outline" onClick={() => { setDone(null); setName(""); setCoord(null); setGmaps(""); }}>Daftarkan desa lain</Button>
+        </div>
       </div>
     );
+  }
 
   return (
     <form onSubmit={submit} className="grid gap-6 md:grid-cols-2">
@@ -55,7 +62,13 @@ export function RegisterVillageForm() {
         <div className="space-y-1.5">
           <Label>1. Nama desa</Label>
           <Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="cth. Sukamaju" />
-          {slug && <p className="text-xs text-muted-foreground">Alamat: {host}/{slug} · subdomain {slug}.{host}</p>}
+          {slug ? (
+            <p className="text-xs text-muted-foreground">
+              Domain utama: <b>{host}/{slug}</b> · Subdomain: <b>{slug}.{host}</b>
+            </p>
+          ) : name.trim() ? (
+            <p className="text-xs text-destructive">Nama desa harus minimal 3 huruf/angka.</p>
+          ) : null}
         </div>
         <div className="space-y-1.5">
           <Label>Provinsi</Label>
@@ -72,7 +85,23 @@ export function RegisterVillageForm() {
             }}
             placeholder="https://www.google.com/maps/@-6.2,106.8,15z atau -6.2, 106.8"
           />
-          <p className="text-xs text-muted-foreground">{coord ? `Lat ${coord.lat}, Lng ${coord.lng}` : "Belum dipilih"}</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs text-muted-foreground">{coord ? `Lat ${coord.lat}, Lng ${coord.lng}` : "Belum dipilih"}</p>
+            <Button
+              type="button"
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-xs"
+              onClick={() => {
+                const url = coord
+                  ? `https://www.google.com/maps/search/?api=1&query=${coord.lat},${coord.lng}`
+                  : "https://www.google.com/maps";
+                window.open(url, "_blank", "noopener");
+              }}
+            >
+              Buka lokasi di Google Maps ↗
+            </Button>
+          </div>
         </div>
         <div className="rounded-lg bg-muted p-3 text-sm">
           3. Admin desa otomatis dibuat — username <b>{slug || "namadesa"}</b>, password <b>{villageAdminPassword(slug || "namadesa")}</b>
