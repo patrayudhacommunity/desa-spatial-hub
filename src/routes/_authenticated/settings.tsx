@@ -38,15 +38,15 @@ function Settings() {
 
   async function changePassword(e: React.FormEvent) {
     e.preventDefault();
-    if (next.length < 8) return toast.error("Kata sandi baru minimal 8 karakter");
-    if (next !== confirm) return toast.error("Konfirmasi kata sandi tidak cocok");
-    if (next === current) return toast.error("Kata sandi baru harus berbeda");
+    if (next.length < 8) { toast.error("Kata sandi baru minimal 8 karakter"); return; }
+    if (next !== confirm) { toast.error("Konfirmasi kata sandi tidak cocok"); return; }
+    if (next === current) { toast.error("Kata sandi baru harus berbeda"); return; }
     setBusy(true);
     const { error: reauth } = await supabase.auth.signInWithPassword({ email: user.email!, password: current });
-    if (reauth) { setBusy(false); return toast.error("Kata sandi saat ini salah"); }
+    if (reauth) { setBusy(false); toast.error("Kata sandi saat ini salah"); return; }
     const { error } = await supabase.auth.updateUser({ password: next });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setCurrent(""); setNext(""); setConfirm("");
     toast.success("Kata sandi berhasil diganti");
   }

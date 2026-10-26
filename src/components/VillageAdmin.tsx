@@ -53,7 +53,7 @@ function PageEditor({ villageId, menuKey, initial }: { villageId: string; menuKe
       { village_id: villageId, menu_key: menuKey, content: text, updated_at: new Date().toISOString() },
       { onConflict: "village_id,menu_key" },
     );
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Konten disimpan");
     qc.invalidateQueries({ queryKey: ["village-pages", villageId] });
     qc.invalidateQueries({ queryKey: ["village-page", villageId, menuKey] });
