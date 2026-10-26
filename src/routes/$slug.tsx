@@ -5,16 +5,9 @@ import { villageQuery } from "@/lib/villages-query";
 import { LazyMap } from "@/components/LazyMap";
 import slide1 from "@/assets/desa-1.jpg";
 import slide2 from "@/assets/desa-2.jpg";
+import { Link } from "@tanstack/react-router";
+import { VILLAGE_MENUS } from "@/lib/menus";
 
-const MENU = [
-  ["Kelembagaan Desa", "Lembaga Kemasyarakatan & Adat"],
-  ["Perlindungan Sosial", "Bantuan & Jaminan Sosial Warga"],
-  ["Kalender Pangan", "Musim Tanam & Produksi Pangan"],
-  ["Produk Olahan Desa", "UMKM & Produk Unggulan Desa"],
-  ["Inovasi & Literasi Desa", "Program Unggulan & Capaian Desa"],
-  ["Papan Elektronik", "Pengumuman & Agenda Desa"],
-  ["Regulasi & Kebijakan", "Perdes, SK & Dokumen Hukum"],
-];
 
 export const Route = createFileRoute("/$slug")({
   loader: async ({ context, params }) => {
@@ -74,8 +67,8 @@ function VillagePage() {
             <div className="mb-6 flex justify-between"><span className="font-semibold">Menu Navigasi</span><button onClick={() => setOpen(false)}>✕</button></div>
             <p className="mb-3 text-xs uppercase tracking-widest text-muted-foreground">Informasi & Layanan</p>
             <ul className="space-y-2">
-              {MENU.map(([t, d]) => (
-                <li key={t} className="rounded-lg border p-3 hover:bg-secondary"><p className="font-semibold">{t}</p><p className="text-xs text-muted-foreground">{d}</p></li>
+              {VILLAGE_MENUS.map((m) => (
+                <li key={m.key}><Link to="/$slug/$menu" params={{ slug, menu: m.key }} className="block rounded-lg border p-3 hover:bg-secondary"><p className="font-semibold">{m.title}</p><p className="text-xs text-muted-foreground">{m.desc}</p></Link></li>
               ))}
             </ul>
             <a href="/auth" className="mt-6 block rounded-lg bg-primary p-3 text-center text-primary-foreground">🔐 Portal Admin Desa</a>
